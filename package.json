@@ -1,0 +1,21 @@
+{
+  "name": "teleinvest",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "Loutchansky Oleg <luchansodev@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "babel src -d build && node ./build/app.js"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "telegraf": "^3.17.2",
+    "yahoo-finance": "^0.3.5"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
