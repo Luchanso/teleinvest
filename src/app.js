@@ -141,7 +141,10 @@ setInterval(() => {
     symbols,
     modules: ['price'],
   }, (err, quotes) => {
-    if (err) log(err);
+    if (err) {
+      log(err);
+      return;
+    }
 
     Object.keys(quotes).forEach((symbol) => {
       watchSymbols[symbol] = {
@@ -152,6 +155,21 @@ setInterval(() => {
   });
 }, 6e4);
 
-// Дописать get запросы
+bot.hears(/get ([\w|.|-]*)/i, (ctx) => {
+  const symbol = ctx.match[1];
+
+  Finance.quote({
+    symbol,
+    modules: ['price', 'summaryDetail'],
+  }, (err, quote) => {
+    if (err) {
+      log(err);
+      return;
+    }
+
+    ctx.reply(JSON.stringify(quote.price, null, 2));
+    ctx.reply(JSON.stringify(quote.summaryDetail, null, 2));
+  });
+});
 
 bot.startPolling();
