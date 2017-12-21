@@ -172,5 +172,4 @@ bot.hears(/get ([\w|.|-]*)/i, (ctx) => {
   });
 });
 
-// bot.startPolling();
-bot.startWebhook(`/${process.env.BOT_PATH}`, null, process.env.BOT_PORT)
+bot.startPolling();
