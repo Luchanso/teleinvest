@@ -6,7 +6,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "babel-node ./src/app.js",
+    "dev": "babel-node ./src/app.js",
+    "build": "babel src --out-dir build",
+    "start": "node build/app",
     "docker": "./docker-build.sh"
   },
   "dependencies": {

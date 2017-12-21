@@ -13,6 +13,8 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const { log } = console;
 
+log('Starting...');
+
 bot.start((ctx) => {
   log('started:', ctx.from.id);
   return ctx.reply('Welcome!');
@@ -28,10 +30,15 @@ bot.use((ctx, next) => {
 
 bot.command('help', (ctx) => {
   log(ctx);
-  ctx.reply('Example:\r\nWatch ROSN.ME 330.30\r\n');
+  ctx.reply(`
+/list
+/get TWX
+/watch BTC-USD 231.2
+/remove ROSN.ME
+`);
 });
 
-bot.hears(/watch ([\w|.|-]*) ([\d|.]*)/i, (ctx) => {
+bot.hears(/\/watch ([\w|.|-]*) ([\d|.]*)/i, (ctx) => {
   ctx.reply('Processing...');
 
   const symbol = ctx.match[1].toUpperCase();
@@ -106,13 +113,13 @@ bot.hears(/^(yes|no)$/, (ctx) => {
     delete ctx.session.currencySymbol;
     delete ctx.session.lastPrice;
 
-    ctx.reply("Done, typewrite 'list' for get all watchers");
+    ctx.reply('Done, typewrite /list for get all watchers');
   } else {
     ctx.reply('Cancel');
   }
 });
 
-bot.hears(/list/i, (ctx) => {
+bot.hears(/\/list/i, (ctx) => {
   const { id } = ctx.from;
 
   const list = watchList[id];
@@ -155,7 +162,7 @@ setInterval(() => {
   });
 }, 6e4);
 
-bot.hears(/get ([\w|.|-]*)/i, (ctx) => {
+bot.hears(/\/get ([\w|.|-]*)/i, (ctx) => {
   const symbol = ctx.match[1];
 
   Finance.quote({
@@ -170,6 +177,23 @@ bot.hears(/get ([\w|.|-]*)/i, (ctx) => {
     ctx.reply(JSON.stringify(quote.price, null, 2));
     ctx.reply(JSON.stringify(quote.summaryDetail, null, 2));
   });
+});
+
+bot.hears(/\/remove ([\w|.|-]*)/i, (ctx) => {
+  const symbol = ctx.match[1];
+
+  const { id } = ctx.from;
+
+  const list = watchList[id];
+  if (!list) return ctx.reply('You don\'t have watchers');
+
+  console.log(watchList[id]);
+
+  delete watchList[id][symbol];
+
+  console.log(watchList[id]);
+
+  ctx.reply('Done, typewrite /list for info');
 });
 
 bot.startPolling();

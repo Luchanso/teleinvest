@@ -7,7 +7,7 @@ WORKDIR /teleinvest
 COPY package.json /teleinvest
 COPY yarn.lock /teleinvest
 
-RUN yarn
+RUN yarn && yarn build
 
 COPY . /teleinvest
 
