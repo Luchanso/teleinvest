@@ -20,6 +20,8 @@ bot.start((ctx) => {
   return ctx.reply('Welcome!');
 });
 
+log(bot);
+
 bot.use(Session());
 
 bot.use((ctx, next) => {
@@ -158,6 +160,12 @@ setInterval(() => {
         ...watchSymbols[symbol],
         lastPrice: quotes[symbol].price.regularMarketPrice,
       };
+    });
+
+    Object.keys(watchList).forEach((key) => {
+      Object.keys(watchList[key]).forEach((symbol) => {
+        // watchList[key][symbol]
+      });
     });
   });
 }, 6e4);
