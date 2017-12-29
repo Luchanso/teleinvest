@@ -6,9 +6,9 @@ WORKDIR /teleinvest
 
 COPY package.json /teleinvest
 COPY yarn.lock /teleinvest
+COPY src /teleinvest/src
+COPY .babelrc /teleinvest
 
 RUN yarn && yarn build
-
-COPY . /teleinvest
 
 CMD ["yarn", "start"]
