@@ -168,9 +168,15 @@ setInterval(() => {
       };
     });
 
-    Object.keys(watchList).forEach((key) => {
-      Object.keys(watchList[key]).forEach((symbol) => {
-        // watchList[key][symbol]
+    users.forEach((user) => {
+      Object.keys(watchList[user]).forEach((symbol) => {
+        const prices = watchList[user][symbol];
+
+        prices.forEach((price) => {
+          if (watchSymbols[symbol].lastPrice > price) {
+            bot.sendMessage(user, `--- ALERT --- \n ${symbol} get price ${symbol}`);
+          }
+        });
       });
     });
   });
