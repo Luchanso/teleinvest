@@ -2,13 +2,13 @@
 // import * as Invest from './invest';
 import Dotenv from 'dotenv';
 import Telegraf from 'telegraf';
-import Markup from 'telegraf/markup';
 import Session from 'telegraf/session';
 import Finance from 'yahoo-finance';
 
 import { start } from './invest/start';
 import { middleware as logMiddleware } from './invest/logger';
 import { help } from './invest/help';
+import { watch, triggers as watchTriggers } from './invest/watch';
 
 Dotenv.config();
 const watchList = {};
@@ -18,56 +18,13 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const { log } = console;
 
 bot.start(start);
+
 bot.use(Session());
 bot.use(logMiddleware);
+
 bot.command('help', help);
 
-bot.hears(/\/watch ([\w|.|-]*) ([\d|.]*)/i, (ctx) => {
-  ctx.reply('Processing...');
-
-  const symbol = ctx.match[1].toUpperCase();
-  const price = Number(ctx.match[2].toLowerCase());
-
-  if (Number.isNaN(price) || !Number.isFinite(price)) {
-    ctx.reply('Not correct price format, try 123.23');
-    return;
-  }
-
-  Finance.quote(
-    {
-      symbol,
-      modules: ['price'],
-    },
-    (err, quotes) => {
-      if (err) {
-        ctx.reply('Sorry, bad request');
-        ctx.reply(`\`\`\`${JSON.stringify(err, null, 2)}\`\`\``);
-
-        log(err);
-
-        return;
-      }
-
-      const { shortName, regularMarketPrice, currencySymbol } = quotes.price;
-
-      ctx.reply(`Now ${symbol} = ${regularMarketPrice}${currencySymbol} ∆${Math.abs(regularMarketPrice - price).toFixed(2)}`);
-      ctx.reply(
-        `I'll notify you when ${shortName} will be ${price}${currencySymbol} okey?`,
-        Markup.keyboard(['yes', 'no'], { columns: 2 })
-          .oneTime()
-          .resize()
-          .extra(),
-      );
-
-      ctx.session.isSelect = true;
-      ctx.session.symbol = symbol;
-      ctx.session.price = price;
-      ctx.session.currencySymbol = currencySymbol;
-      ctx.session.lastPrice = regularMarketPrice;
-    },
-  );
-});
-
+bot.hears(watchTriggers, watch);
 bot.hears(/^(yes|no)$/, (ctx) => {
   if (!ctx.session.isSelect) return;
 
