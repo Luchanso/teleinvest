@@ -6,6 +6,10 @@ import Markup from 'telegraf/markup';
 import Session from 'telegraf/session';
 import Finance from 'yahoo-finance';
 
+import { start } from './invest/start';
+import { middleware as logMiddleware } from './invest/logger';
+import { help } from './invest/help';
+
 Dotenv.config();
 const watchList = {};
 const watchSymbols = {};
@@ -13,32 +17,10 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const { log } = console;
 
-log('Starting...');
-
-bot.start((ctx) => {
-  log('started:', ctx.from.id);
-  return ctx.reply('Welcome!');
-});
-
-log(bot);
-
+bot.start(start);
 bot.use(Session());
-
-bot.use((ctx, next) => {
-  log('Request', ctx.message);
-
-  return next(ctx);
-});
-
-bot.command('help', (ctx) => {
-  log(ctx);
-  ctx.reply(`
-/list
-/get TWX
-/watch BTC-USD 231.2
-/remove ROSN.ME
-`);
-});
+bot.use(logMiddleware);
+bot.command('help', help);
 
 bot.hears(/\/watch ([\w|.|-]*) ([\d|.]*)/i, (ctx) => {
   ctx.reply('Processing...');
