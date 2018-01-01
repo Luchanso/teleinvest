@@ -189,11 +189,11 @@ bot.hears(/\/remove ([\w|.|-]*)/i, (ctx) => {
   const list = watchList[id];
   if (!list) return ctx.reply('You don\'t have watchers');
 
-  console.log(watchList[id]);
+  log(watchList[id]);
 
   delete watchList[id][symbol];
 
-  console.log(watchList[id]);
+  log(watchList[id]);
 
   ctx.reply('Done, typewrite /list for info');
 });
