@@ -11,6 +11,7 @@ import { middleware as logMiddleware } from './invest/logger';
 import { help } from './invest/help';
 import { listFunc, listTriggers } from './invest/list';
 import { remove, removeTriggers } from './invest/remove';
+import { get, getTriggers } from './invest/get';
 import {
   watch,
   triggers as watchTriggers,
@@ -34,6 +35,7 @@ bot.hears(watchTriggers, watch);
 bot.hears(confirmationTriggers, confirmationWatch);
 bot.hears(listTriggers, listFunc);
 bot.hears(removeTriggers, remove);
+bot.hears(getTriggers, get);
 
 setInterval(() => {
   const users = Object.values(watchList);
@@ -74,25 +76,5 @@ setInterval(() => {
     },
   );
 }, 6e4);
-
-bot.hears(/\/get ([\w|.|-]*)/i, (ctx) => {
-  const symbol = ctx.match[1];
-
-  Finance.quote(
-    {
-      symbol,
-      modules: ['price', 'summaryDetail'],
-    },
-    (err, quote) => {
-      if (err) {
-        log(err);
-        return;
-      }
-
-      ctx.reply(JSON.stringify(quote.price, null, 2));
-      ctx.reply(JSON.stringify(quote.summaryDetail, null, 2));
-    },
-  );
-});
 
 bot.startPolling();
