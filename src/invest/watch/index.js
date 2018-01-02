@@ -1,6 +1,8 @@
 import Finance from 'yahoo-finance';
 import Markup from 'telegraf/markup';
 
+export { confirmationTriggers, confirmationWatch } from './confirmation';
+
 const { log } = console;
 
 export const triggers = /\/watch ([\w|.|-]*) ([\d|.]*)/i;
