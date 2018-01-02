@@ -5,14 +5,13 @@ import Telegraf from 'telegraf';
 import Session from 'telegraf/session';
 import Finance from 'yahoo-finance';
 
+import { watchSymbols, watchList } from './db';
 import { start } from './invest/start';
 import { middleware as logMiddleware } from './invest/logger';
 import { help } from './invest/help';
 import { watch, triggers as watchTriggers } from './invest/watch';
 
 Dotenv.config();
-const watchList = {};
-const watchSymbols = {};
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const { log } = console;
