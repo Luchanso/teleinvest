@@ -10,6 +10,7 @@ import { start } from './invest/start';
 import { middleware as logMiddleware } from './invest/logger';
 import { help } from './invest/help';
 import { listFunc, listTriggers } from './invest/list';
+import { remove, removeTriggers } from './invest/remove';
 import {
   watch,
   triggers as watchTriggers,
@@ -32,6 +33,7 @@ bot.command('help', help);
 bot.hears(watchTriggers, watch);
 bot.hears(confirmationTriggers, confirmationWatch);
 bot.hears(listTriggers, listFunc);
+bot.hears(removeTriggers, remove);
 
 setInterval(() => {
   const users = Object.values(watchList);
@@ -91,23 +93,6 @@ bot.hears(/\/get ([\w|.|-]*)/i, (ctx) => {
       ctx.reply(JSON.stringify(quote.summaryDetail, null, 2));
     },
   );
-});
-
-bot.hears(/\/remove ([\w|.|-]*)/i, (ctx) => {
-  const symbol = ctx.match[1];
-
-  const { id } = ctx.from;
-
-  const list = watchList[id];
-  if (!list) return ctx.reply("You don't have watchers");
-
-  log(watchList[id]);
-
-  delete watchList[id][symbol];
-
-  log(watchList[id]);
-
-  ctx.reply('Done, typewrite /list for info');
 });
 
 bot.startPolling();
