@@ -9,6 +9,7 @@ import { watchSymbols, watchList } from './db';
 import { start } from './invest/start';
 import { middleware as logMiddleware } from './invest/logger';
 import { help } from './invest/help';
+import { listFunc, listTriggers } from './invest/list';
 import {
   watch,
   triggers as watchTriggers,
@@ -30,37 +31,7 @@ bot.command('help', help);
 
 bot.hears(watchTriggers, watch);
 bot.hears(confirmationTriggers, confirmationWatch);
-
-bot.hears(/\/list/i, (ctx) => {
-  const { id } = ctx.from;
-
-  const list = watchList[id];
-  if (!list) {
-    ctx.reply('List is empty');
-    return;
-  }
-
-  const keys = Object.keys(list);
-
-  if (keys.length === 0) {
-    ctx.reply('List is empty');
-    return;
-  }
-
-  const message = keys.reduce((prev, symbol) => {
-    const { currencySymbol, lastPrice } = watchSymbols[symbol];
-    return (
-      prev +
-      list[symbol].reduce(
-        (summ, price) =>
-          `${summ}\r\n${symbol} = ${price} ${currencySymbol} (now ${lastPrice} ${currencySymbol})`,
-        '',
-      )
-    );
-  }, '');
-
-  ctx.reply(message);
-});
+bot.hears(listTriggers, listFunc);
 
 setInterval(() => {
   const users = Object.values(watchList);
