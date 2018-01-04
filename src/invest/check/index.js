@@ -4,6 +4,8 @@ import { watchSymbols, watchList } from '../../db';
 const { log } = console;
 
 export const check = (bot) => {
+  log('watchList', watchList);
+
   const users = Object.values(watchList);
   const symbols = Object.keys(watchSymbols);
 
