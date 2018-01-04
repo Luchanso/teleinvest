@@ -1,7 +1,6 @@
 const { log } = console;
 
 export const help = (ctx) => {
-  log(ctx);
   return ctx.reply(`
 /list
 /get TWX
