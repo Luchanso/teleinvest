@@ -1,5 +1,3 @@
-// import * as Bot from './bot';
-// import * as Invest from './invest';
 import Dotenv from 'dotenv';
 import Telegraf from 'telegraf';
 import Session from 'telegraf/session';
@@ -20,7 +18,7 @@ import {
 
 Dotenv.config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const checkInterval = 5 * 6e4; // 5 min
+const checkInterval = 3 * 6e4; // 3 min
 
 bot.start(start);
 
@@ -35,6 +33,6 @@ bot.hears(listTriggers, listFunc);
 bot.hears(removeTriggers, remove);
 bot.hears(getTriggers, get);
 
-setInterval(check, checkInterval);
+setInterval(() => check(bot), checkInterval);
 
 bot.startPolling();

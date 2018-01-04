@@ -3,7 +3,7 @@ import { watchSymbols, watchList } from '../../db';
 
 const { log } = console;
 
-export const check = () => {
+export const check = (bot) => {
   const users = Object.values(watchList);
   const symbols = Object.keys(watchSymbols);
 
