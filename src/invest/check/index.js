@@ -41,7 +41,7 @@ export const check = (bot) => {
       });
     },
   );
-}
+};
 
 export default {
   check,
