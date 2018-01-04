@@ -1,6 +1,6 @@
 {
   "name": "teleinvest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "app.js",
   "author": "Loutchansky Oleg <luchansodev@gmail.com>",
   "license": "MIT",
@@ -9,7 +9,8 @@
     "dev": "babel-node ./src/app.js",
     "build": "babel src --out-dir build",
     "start": "node build/app",
-    "docker": "./docker-build.sh"
+    "docker": "./docker-build.sh",
+    "rollup": "git push server master"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
