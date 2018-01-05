@@ -34,7 +34,7 @@ export const check = (bot) => {
 
           prices.forEach((price) => {
             if (watchSymbols[symbol].lastPrice > price) {
-              bot.sendMessage(user, `--- ALERT --- \n ${symbol} get price ${symbol}`);
+              bot.telegram.sendMessage(user, `--- ALERT --- \n ${symbol} get price ${symbol}`);
             }
           });
         });
