@@ -3,6 +3,15 @@ import { watchSymbols, watchList } from '../../db';
 
 const { log } = console;
 
+const updateWatchSymbols = (quotes) => {
+  Object.keys(quotes).forEach((symbol) => {
+    watchSymbols[symbol] = {
+      ...watchSymbols[symbol],
+      lastPrice: quotes[symbol].price.regularMarketPrice,
+    };
+  });
+}
+
 export const check = (bot) => {
   const users = Object.keys(watchList);
   const symbols = Object.keys(watchSymbols);
@@ -10,6 +19,7 @@ export const check = (bot) => {
   if (users.length === 0 || symbols.length === 0) return;
   log('Update watch list');
 
+  // TODO: Refactoring
   Finance.quote(
     {
       symbols,
@@ -21,12 +31,7 @@ export const check = (bot) => {
         return;
       }
 
-      Object.keys(quotes).forEach((symbol) => {
-        watchSymbols[symbol] = {
-          ...watchSymbols[symbol],
-          lastPrice: quotes[symbol].price.regularMarketPrice,
-        };
-      });
+      updateWatchSymbols(quotes);
 
       users.forEach((user) => {
         Object.keys(watchList[user]).forEach((symbol) => {
@@ -34,7 +39,10 @@ export const check = (bot) => {
 
           prices.forEach((price) => {
             if (watchSymbols[symbol].lastPrice > price) {
-              bot.telegram.sendMessage(user, `--- ALERT --- \n ${symbol} get price ${symbol}`);
+              bot.telegram.sendMessage(user, `--- ALERT --- \n ${symbol} get price ${price} ${watchSymbols[symbol].currencySymbol}`);
+
+              const deleteIndex = watchList[user][symbol].indexOf(price);
+              watchList[user][symbol].splice(deleteIndex, 1);
             }
           });
         });
